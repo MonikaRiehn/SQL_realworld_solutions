@@ -1,19 +1,19 @@
 with cte as(
-select
- userid
- , count(eventlogid) as num_link_clicks
+ select
+  userid
+  , count(eventlogid) as num_link_clicks
 from
- frontendeventlog
+  frontendeventlog
 where
- eventid = 5
+  eventid = 5
 group by
- userid
+  userid
 )
 
 select
- num_link_clicks
- , count(userid) as num_users
+  num_link_clicks
+  , count(userid) as num_users
 from
- cte
+  cte
 group by
- num_link_clicks
+  num_link_clicks
