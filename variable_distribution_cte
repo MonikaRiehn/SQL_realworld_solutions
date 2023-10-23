@@ -1,0 +1,19 @@
+with cte as(
+select
+ userid
+ , count(eventlogid) as num_link_clicks
+from
+ frontendeventlog
+where
+ eventid = 5
+group by
+ userid
+)
+
+select
+ num_link_clicks
+ , count(userid) as num_users
+from
+ cte
+group by
+ num_link_clicks
