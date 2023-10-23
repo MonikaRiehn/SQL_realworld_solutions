@@ -2,23 +2,25 @@
 
 with monthly_revs as(
     select
-     date_trunc('month', s.ORDERDATE) as ordermonth,
-     p.PRODUCTNAME,
-     sum(s.Revenue) as revenue
+        date_trunc('month', s.ORDERDATE) as ordermonth
+        , p.PRODUCTNAME
+        , sum(s.Revenue) as revenue
     from Subscriptions s
-    join Products p
-    using(PRODUCTID)
+        join Products p
+            using(PRODUCTID)
     where
-     extract(year from s.ORDERDATE) = '2022'
+        extract(year from s.ORDERDATE) = '2022'
     group by
-     date_trunc('month', s.OrderDate),
-     p.productname
+        date_trunc('month', s.OrderDate)
+        , p.productname
 )
 select
-  productname,
-  min(revenue) as min_rev,
-  max(revenue) as max_rev,
-  avg(revenue) as avg_rev,
-  stddev(revenue) as std_dev_rev
-from monthly_revs
+    productname
+    , min(revenue) as min_rev
+    , max(revenue) as max_rev
+    , avg(revenue) as avg_rev
+    , stddev(revenue) as std_dev_rev
+from
+    monthly_revs
 group by 
+    productname;
