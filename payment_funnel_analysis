@@ -22,7 +22,8 @@ select
 from
 	subscriptions s
 left join	-- important, because we want ALL subscriptions, also those with maxstatus null
-	maxstatustable m on m.subscriptionid = s.subscriptionid
+	maxstatustable m
+on m.subscriptionid = s.subscriptionid
 )
 
 select
