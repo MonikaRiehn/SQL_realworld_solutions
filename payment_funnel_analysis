@@ -1,0 +1,34 @@
+with maxstatustable as(
+	select
+		subscriptionid
+		, max(statusid) as maxstatus
+	from
+		PaymentStatusLog
+	group by
+		subscriptionid
+),
+
+paymentfunnel as(
+select
+	s.subscriptionid
+	, case when maxstatus = 1 then 'PaymentWidgetOpened'
+	when maxstatus = 2 then 'PaymentEntered'
+	when maxstatus = 3 and currentstatus = 0 then 'User Error with Payment Submission'
+	when maxstatus = 3 and currentstatus != 0 then 'Payment Submitted'
+	when maxstatus = 4 and currentstatus = 0 then 'Payment Processing Error with Vendor'
+	when maxstatus = 4 and currentstatus != 0 then 'Payment Success'
+	when maxstatus = 5 then 'Complete'
+	when maxstatus is null then 'User did not start payment process' end as paymentfunnelstage
+from
+	subscriptions s
+left join	-- important, because we want ALL subscriptions, also those with maxstatus null
+	maxstatustable m on m.subscriptionid = s.subscriptionid
+)
+
+select
+	paymentfunnelstage
+	, count(subscriptionid) subscriptions
+from
+	paymentfunnel
+group by
+	paymentfunnelstage
