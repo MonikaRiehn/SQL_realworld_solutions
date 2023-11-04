@@ -1,0 +1,23 @@
+select
+    userid
+    , sum(
+        case when l.eventid = 1 then 1 else 0 end
+    ) as ViewedHelpCenterPage
+    , sum(
+        case when l.eventid = 2 then 1 else 0 end
+    ) as ClickedFAQs
+    , sum(
+        case when l.eventid = 3 then 1 else 0 end
+    ) as ClickedContactSupport
+    , sum(
+        case when l.eventid = 4 then 1 else 0 end
+    ) as SubmittedTicket
+from
+    frontendeventlog l
+join
+    frontendeventdefinitions d
+using(eventid)
+where
+    d.eventtype = 'Customer Support'
+group by
+    userid
