@@ -16,7 +16,8 @@ from
     frontendeventlog l
 join
     frontendeventdefinitions d
-using(eventid)
+using
+    (eventid)
 where
     d.eventtype = 'Customer Support'
 group by
